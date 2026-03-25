@@ -1,16 +1,21 @@
 const multer = require('multer');
-var fs = require('fs');
 
 const storage = multer.diskStorage({
-  //@ts-ignore
-  destination: function (req, file, cb) {
-    cb(null, './uploads'); // Folder where the images will be stored
+  destination: (
+    _req: any,
+    _file: any,
+    cb: (err: null, dest: string) => void
+  ) => {
+    cb(null, './uploads');
   },
-  //@ts-ignore
-  filename: function (req, file, cb) {
-    cb(null, file.originalname); // File name
+  filename: (
+    _req: any,
+    file: { originalname: string },
+    cb: (err: null, filename: string) => void
+  ) => {
+    cb(null, file.originalname);
   }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
 export const uploadImageMiddleware = upload.single('image');

@@ -29,7 +29,6 @@ export const validateToken = async (
         res.status(401).json({ error: 'Invalid token' });
         return;
       }
-      //@ts-ignore
       req.user = (decoded as DecodedToken).user;
       next();
     });

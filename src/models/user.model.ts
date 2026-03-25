@@ -42,7 +42,17 @@ const userSchema = new Schema<IUser>(
       type: String
     }
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      transform: (_doc, ret: Record<string, any>) => {
+        ret.id = ret._id.toString();
+        delete ret._id;
+        delete ret.__v;
+        delete ret.password;
+      }
+    }
+  }
 );
 
 export default mongoose.model<IUser>('User', userSchema);

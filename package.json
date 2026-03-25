@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "start": "nodemon --exec ts-node src/index.ts",
+    "start": "nodemon --exec ts-node --files src/index.ts",
     "build": "tsc"
   },
   "dependencies": {
@@ -16,7 +16,8 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^6.21.0",
     "mongoose": "^8.22.1",
-    "multer": "^2.1.1"
+    "multer": "^2.1.1",
+    "socket.io": "^4.8.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.3",

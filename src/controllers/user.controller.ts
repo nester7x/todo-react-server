@@ -1,17 +1,16 @@
 import type { Request, Response } from 'express';
-import User from '../models/user.model';
 import fs from 'fs';
+import User from '../models/user.model';
 
 export const getMe = async (req: Request, res: Response) => {
   try {
-    //@ts-ignore
-    const { id } = req.user;
+    const { id } = req.user!;
     const user = await User.findById(id);
     if (!user) {
       res.status(404).json({ error: 'User not found' });
       return;
     }
-    res.status(200).json({ user });
+    res.status(200).json(user);
   } catch (e) {
     res.status(500).json({ message: (e as Error).message });
   }
@@ -48,8 +47,7 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    //@ts-ignore
-    const { id } = req.user;
+    const { id } = req.user!;
     if (!id) {
       res.status(400).json({ error: 'User ID is required' });
       return;
@@ -96,13 +94,15 @@ export const deleteUser = async (req: Request, res: Response) => {
 
 export const uploadUserImage = async (req: Request, res: Response) => {
   try {
-    //@ts-ignore
     const file = req.file;
+    if (!file) {
+      res.status(400).json({ error: 'No file uploaded' });
+      return;
+    }
     const readimagem = fs.readFileSync(`uploads/${file.originalname}`);
     const imagemBase64 = Buffer.from(readimagem).toString('base64');
 
-    //@ts-ignore
-    await User.findByIdAndUpdate(req.user.id, { image: imagemBase64 });
+    await User.findByIdAndUpdate(req.user!.id, { image: imagemBase64 });
 
     res.json({ message: 'Image uploaded successfully' });
   } catch (e) {
