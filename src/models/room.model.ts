@@ -10,10 +10,7 @@ export interface IRoom {
 
 const roomSchema = new Schema<IRoom>(
   {
-    name: {
-      type: String,
-      required: true
-    },
+    name: { type: String },
     isDirectMessage: { type: Boolean, default: false },
     owner: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     members: [{ type: Schema.Types.ObjectId, ref: 'User' }]

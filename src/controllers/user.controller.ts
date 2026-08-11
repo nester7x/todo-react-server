@@ -30,7 +30,7 @@ export const getUser = async (req: Request, res: Response) => {
       return;
     }
 
-    res.status(200).json({ user });
+    res.status(200).json(user);
   } catch (e) {
     res.status(500).json({ message: (e as Error).message });
   }
@@ -38,8 +38,22 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const users = await User.find();
-    res.status(200).json(users);
+    const { search } = req.query;
+    const { id } = req.user!;
+    const user = await User.findById(id);
+
+    const query = search
+      ? {
+          $or: [
+            { username: new RegExp(search as string, 'i') },
+            { email: new RegExp(search as string, 'i') }
+          ]
+        }
+      : {};
+
+    const users = await User.find(query);
+    const filteredUsers = users.filter((u) => user!.email !== u.email);
+    res.status(200).json(filteredUsers);
   } catch (e) {
     res.status(500).json({ message: (e as Error).message });
   }
